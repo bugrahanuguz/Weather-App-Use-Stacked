@@ -1,0 +1,24 @@
+name: mart_tech_test
+description: A new Flutter project.
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=3.1.5 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  geolocator: ^10.1.0
+  get_it: ^7.6.4
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  stacked: ^3.4.1+1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
