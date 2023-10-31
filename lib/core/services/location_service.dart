@@ -1,6 +1,7 @@
 import 'package:geolocator/geolocator.dart';
 
 class LocationService {
+
   Future<Position> getCurrentLocation() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -26,7 +27,6 @@ class LocationService {
         'Kalıcı olarak konum izni reddedildi - ayarlardan düzeltebilirsiniz',
       );
     }
-
     return await Geolocator.getCurrentPosition();
   }
 }

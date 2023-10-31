@@ -142,8 +142,8 @@ class WeatherModel {
 }
 
 class Coord {
-  double? lon;
-  double? lat;
+  num? lon;
+  num? lat;
 
   Coord({this.lon, this.lat});
 

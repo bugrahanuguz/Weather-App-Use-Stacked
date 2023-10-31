@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mart_tech_test/core/locator.dart';
+import 'package:mart_tech_test/core/services/location_service.dart';
+import 'package:mart_tech_test/features/weather/view/splashpage/splash_screen.dart';
 
 void main() {
   setupLocator();
+  LocationService().getCurrentLocation;
   runApp(const MainApp());
 }
 
@@ -11,12 +14,9 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
-    );
+    return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(useMaterial3: true),
+        home: const SplashScreen());
   }
 }

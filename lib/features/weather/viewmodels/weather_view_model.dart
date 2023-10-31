@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:mart_tech_test/core/models/weather_model.dart';
+import 'package:mart_tech_test/core/services/location_service.dart';
 import 'package:mart_tech_test/core/services/weather_service.dart';
 import 'package:mart_tech_test/features/weather/viewmodels/forecast_view_model.dart';
 import 'package:stacked/stacked.dart';
@@ -12,10 +14,25 @@ class WeatherViewModel extends BaseViewModel {
   Clouds? currentClouds;
   WeatherCondition? lastCondition;
 
+  void initialSetup() {
+    getLocationAndFetchForecast();
+  }
+
+  Future<WeatherModel> getLocationAndFetchForecast() async {
+    var locationService = LocationService(); 
+    setBusy(true);
+    Position position = await locationService.getCurrentLocation();
+    final response = await service.fetchWeatherToCoord(
+        position.latitude.toString(), position.longitude.toString());
+    currentWeather = response;
+    setBusy(false);
+    return currentWeather!;
+  }
+
   Future<WeatherModel> getWeather(String cityName) async {
     cityNamee = cityName;
     setBusy(true);
-    final response = await service.fetchWeather(cityName);
+    final response = await service.fetchWeatherToCityName(cityName);
     currentWeather = response;
     currentWeather?.name = cityNamee;
     setBusy(false);
@@ -29,7 +46,7 @@ class WeatherViewModel extends BaseViewModel {
     try {
       await Future.delayed(Duration(seconds: 1), () => {});
 
-      latest = await service.fetchWeather(city);
+      latest = await service.fetchWeatherToCityName(city);
     } catch (e) {
       "this.isRequestError = true";
     }
@@ -44,7 +61,7 @@ class WeatherViewModel extends BaseViewModel {
   Future updateModel(WeatherModel forecast, String city, BuildContext context,
       ForecastViewModel forecastViewModel) async {
     cityNamee = city;
-    final response = await service.fetchWeather(cityNamee!);
+    final response = await service.fetchWeatherToCityName(cityNamee!);
     currentWeather = response;
     currentWeather?.name = cityNamee;
 

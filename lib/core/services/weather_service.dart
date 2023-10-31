@@ -5,7 +5,7 @@ import 'package:mart_tech_test/core/models/weather_model.dart';
 class WeatherService {
   String _key = "2f486d31ac1b60c7629402f9eaaf4b97";
   String baseApiCityName = "https://api.openweathermap.org/data/2.5/weather?q=";
-  String baseApiCoord = "https://api.openweathermap.org/data/2.5/weather?";
+  String baseApiCoord = "https://api.openweathermap.org/data/2.5/weather";
 
   Uri getUrltoCityName(String cityName) =>
       Uri.parse("$baseApiCityName$cityName&appid=$_key&units=metric&lang=tr");
@@ -45,6 +45,4 @@ class WeatherService {
       return null;
     }
   }
-
-  fetchWeather(String cityName) {}
 }
