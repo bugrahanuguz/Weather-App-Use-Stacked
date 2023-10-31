@@ -1,17 +1,22 @@
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:mart_tech_test/core/services/forecast_service.dart';
+import 'package:mart_tech_test/core/services/weather_service.dart';
 
 final GetIt locator = GetIt.instance;
 
 void setupLocator() {
   // Geolocator servisinin kaydedilmesi
-  locator.registerLazySingleton(() => Geolocator());
-
+  final Geolocator geolocator = Geolocator();
+  locator.registerLazySingleton(() => geolocator);
   // Hive servisinin kaydedilmesi
   locator.registerLazySingleton(() async {
     final HiveInterface hive = Hive;
     final appDocumentDir = await hive.openBox('locationBox');
     return appDocumentDir;
   });
+  // ForecastService ve WeatherService sınıflarının kaydedilmesi
+  locator.registerLazySingleton(() => ForecastService);
+  locator.registerLazySingleton(() => WeatherService());
 }

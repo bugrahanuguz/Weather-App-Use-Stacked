@@ -45,4 +45,6 @@ class WeatherService {
       return null;
     }
   }
+
+  fetchWeather(String cityName) {}
 }
