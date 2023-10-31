@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mart_tech_test/core/locator.dart';
 
 void main() {
+  setupLocator();
   runApp(const MainApp());
 }
 
