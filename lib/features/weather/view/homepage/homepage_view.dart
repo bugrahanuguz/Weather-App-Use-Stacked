@@ -5,6 +5,7 @@ import 'package:mart_tech_test/features/weather/view/homepage/components/city_va
 import 'package:mart_tech_test/features/weather/view/homepage/components/daily_weather.dart';
 import 'package:mart_tech_test/features/weather/view/homepage/components/icon_widget.dart';
 import 'package:mart_tech_test/features/weather/view/homepage/components/location_view.dart';
+import 'package:mart_tech_test/features/weather/view/homepage/components/temp_variables.dart';
 import 'package:mart_tech_test/features/weather/viewmodels/weather_view_model.dart';
 import 'package:stacked/stacked.dart';
 
@@ -20,8 +21,6 @@ class HomePage extends StatelessWidget {
       },
       builder: (context, model, child) {
         String newCity = "";
-        double longitude = model.currentWeather!.coord!.lon!.toDouble();
-        double latitude = model.currentWeather!.coord!.lat!.toDouble();
         WeatherModel? currentWeather = model.currentWeather;
         if (currentWeather != null && !model.isBusy) {
           bool isDay = model.determineIsDay(currentWeather);
@@ -44,20 +43,17 @@ class HomePage extends StatelessWidget {
                         : model.isRequestPending != false
                             ? errorText()
                             : LocationView(
-                                longitude: longitude,
-                                latitude: latitude,
+                                longitude: model.currentWeather!.coord!.lon!
+                                    .toDouble(),
+                                latitude: model.currentWeather!.coord!.lat!
+                                    .toDouble(),
                                 city: currentWeather.name,
                               ),
                     IconWidget(
                       assetName: currentWeather.weather![0].icon!,
                     ),
                     descriptionTextWidget(context, currentWeather),
-                    Column(
-                      children: [
-                        tempTextWidget(currentWeather),
-                        feelsLikeTextWidget(currentWeather),
-                      ],
-                    ),
+                    TempVariables(currentWeather: currentWeather),
                     _sizedBox(context),
                     CityVariables(
                       isDay: isDay,
@@ -66,8 +62,8 @@ class HomePage extends StatelessWidget {
                     _sizedBox(context),
                     DailyWeather(
                       isDay: isDay,
-                      longitude: longitude,
-                      latitude: latitude,
+                      longitude: model.currentWeather!.coord!.lon!.toDouble(),
+                      latitude: model.currentWeather!.coord!.lat!.toDouble(),
                     ),
                   ],
                 ),
@@ -91,24 +87,6 @@ class HomePage extends StatelessWidget {
         textAlign: TextAlign.center,
         style: const TextStyle(fontSize: 24, color: Colors.white),
       ),
-    );
-  }
-
-  Container tempTextWidget(WeatherModel currentWeather) {
-    return Container(
-      padding: const EdgeInsets.only(left: 15),
-      child: Text(
-        "${currentWeather.main!.temp!.toInt()} C°",
-        style: const TextStyle(
-            fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white),
-      ),
-    );
-  }
-
-  Text feelsLikeTextWidget(WeatherModel currentWeather) {
-    return Text(
-      "Feels Like: ${currentWeather.main!.feelsLike!.toInt()} C°",
-      style: const TextStyle(color: Colors.white),
     );
   }
 
