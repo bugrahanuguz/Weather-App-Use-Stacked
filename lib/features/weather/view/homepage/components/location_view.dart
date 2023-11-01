@@ -5,8 +5,8 @@ class LocationView extends StatelessWidget {
   final double? latitude;
   final String? city;
 
-  LocationView(
-      { Key? key,
+  const LocationView(
+      {Key? key,
       required this.longitude,
       required this.latitude,
       required this.city})
@@ -16,35 +16,35 @@ class LocationView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Column(children: [
-        Text('$city',
-            style: const TextStyle(
-              fontSize: 40,
-              fontWeight: FontWeight.w300,
-              color: Colors.white,
-            )),
+        cityNameTextWidget(),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(Icons.location_on, color: Colors.white, size: 15),
             const SizedBox(width: 10),
-            Text(longitude.toString(),
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                )),
-            const Text(' , ',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                )),
-            Text(latitude.toString(),
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                )),
+            buildCoordText(longitude.toString()),
+            buildCoordText(' , '.toString()),
+            buildCoordText(latitude.toString().toString()),
           ],
         )
       ]),
     );
+  }
+
+  Text cityNameTextWidget() {
+    return Text('$city',
+        style: const TextStyle(
+          fontSize: 40,
+          fontWeight: FontWeight.w300,
+          color: Colors.white,
+        ));
+  }
+
+  Text buildCoordText(String text) {
+    return Text(text,
+        style: const TextStyle(
+          fontSize: 16,
+          color: Colors.white,
+        ));
   }
 }

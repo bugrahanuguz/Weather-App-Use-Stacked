@@ -17,6 +17,7 @@ class ForecastViewModel extends BaseViewModel {
         forecastList!.add(i);
       }
     }
+    notifyListeners();
     setBusy(false);
     return forecastList;
   }

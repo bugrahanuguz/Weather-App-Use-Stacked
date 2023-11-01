@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:mart_tech_test/core/models/weather_model.dart';
 import 'package:mart_tech_test/core/services/location_service.dart';
@@ -11,15 +10,13 @@ class WeatherViewModel extends BaseViewModel {
   WeatherService service = WeatherService();
   String? cityNamee;
   WeatherModel? currentWeather;
-  Clouds? currentClouds;
-  WeatherCondition? lastCondition;
 
-  void initialSetup() {
-    getLocationAndFetchForecast();
+  Future<void> initialSetup() async {
+    await getLocationAndFetchForecast();
   }
 
   Future<WeatherModel> getLocationAndFetchForecast() async {
-    var locationService = LocationService(); 
+    var locationService = LocationService();
     setBusy(true);
     Position position = await locationService.getCurrentLocation();
     final response = await service.fetchWeatherToCoord(
@@ -29,44 +26,42 @@ class WeatherViewModel extends BaseViewModel {
     return currentWeather!;
   }
 
-  Future<WeatherModel> getWeather(String cityName) async {
-    cityNamee = cityName;
-    setBusy(true);
-    final response = await service.fetchWeatherToCityName(cityName);
-    currentWeather = response;
-    currentWeather?.name = cityNamee;
-    setBusy(false);
-    return currentWeather!;
-  }
+  bool determineIsDay(WeatherModel? currentWeather) {
+    DateTime currentTime = DateTime.now();
+    if (currentWeather != null && currentWeather.sys != null) {
+      var sunrise = currentWeather.sys!.sunrise;
+      var sunset = currentWeather.sys!.sunset;
+      if (sunrise != null && sunset != null) {
+        final DateTime sunriseTime =
+            DateTime.fromMillisecondsSinceEpoch(sunrise.toInt() * 1000);
+        final DateTime sunsetTime =
+            DateTime.fromMillisecondsSinceEpoch(sunset.toInt() * 1000);
 
-  Future<WeatherModel> getLatestWeather(String city, BuildContext context,
-      ForecastViewModel forecastViewModel) async {
-    setBusyForObject(currentWeather, true);
-    WeatherModel? latest;
-    try {
-      await Future.delayed(Duration(seconds: 1), () => {});
-
-      latest = await service.fetchWeatherToCityName(city);
-    } catch (e) {
-      "this.isRequestError = true";
+        if (currentTime.isAfter(sunriseTime) &&
+            currentTime.isBefore(sunsetTime)) {
+          return true;
+        }
+      }
     }
-
-    await updateModel(latest!, city, context, forecastViewModel);
-    forecastViewModel.getForecast(
-        latest.coord!.lat.toString(), latest.coord!.lon.toString());
-    setBusyForObject(currentWeather, false);
-    return latest;
+    return false; 
   }
 
-  Future updateModel(WeatherModel forecast, String city, BuildContext context,
-      ForecastViewModel forecastViewModel) async {
-    cityNamee = city;
-    final response = await service.fetchWeatherToCityName(cityNamee!);
-    currentWeather = response;
-    currentWeather?.name = cityNamee;
+  Future<WeatherModel?> getWeatherForCity(
+      String city, ForecastViewModel forecastViewModel) async {
+    setBusy(true);
+      final latestWeather = await service.fetchWeatherToCityName(city);
 
-    await forecastViewModel.getForecast(currentWeather!.coord!.lat.toString(),
-        currentWeather!.coord!.lon.toString());
-    return currentWeather!;
+      currentWeather = latestWeather;
+
+      cityNamee = city;
+
+      await forecastViewModel.getForecast(
+        latestWeather!.coord!.lat.toString(),
+        latestWeather.coord!.lon.toString(),
+      );
+
+    setBusy(false);
+    notifyListeners();
+    return currentWeather;
   }
 }

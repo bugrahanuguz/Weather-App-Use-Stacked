@@ -298,8 +298,8 @@ class City {
 }
 
 class Coord {
-  double? lat;
-  double? lon;
+  num? lat;
+  num? lon;
 
   Coord({this.lat, this.lon});
 

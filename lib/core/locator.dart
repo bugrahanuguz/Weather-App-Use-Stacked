@@ -3,6 +3,7 @@ import 'package:hive/hive.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:mart_tech_test/core/services/forecast_service.dart';
 import 'package:mart_tech_test/core/services/weather_service.dart';
+
 import 'package:mart_tech_test/features/weather/viewmodels/forecast_view_model.dart';
 import 'package:mart_tech_test/features/weather/viewmodels/weather_view_model.dart';
 
@@ -18,9 +19,10 @@ void setupLocator() {
     final appDocumentDir = await hive.openBox('locationBox');
     return appDocumentDir;
   });
-  // ForecastService ve WeatherService sınıflarının kaydedilmesi
+
   locator.registerLazySingleton(() => ForecastService());
   locator.registerLazySingleton(() => WeatherService());
   locator.registerLazySingleton(() => ForecastViewModel());
   locator.registerLazySingleton(() => WeatherViewModel());
+
 }

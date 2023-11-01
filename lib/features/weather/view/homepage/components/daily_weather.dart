@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mart_tech_test/core/models/forecast_model.dart';
 import 'package:mart_tech_test/features/weather/viewmodels/forecast_view_model.dart';
 import 'package:stacked/stacked.dart';
 import 'package:intl/intl.dart';
@@ -29,41 +30,47 @@ class DailyWeather extends StatelessWidget {
         child: model.isBusy
             ? const SizedBox()
             : ListView.builder(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 scrollDirection: Axis.horizontal,
                 shrinkWrap: true,
                 itemCount: model.forecastList?.length,
                 itemBuilder: (BuildContext context, index) {
                   String? iconName =
                       model.forecastList?[index].weather![0].icon;
+                  List<WeatherList>? forecastList = model.forecastList;
                   return Row(
                     children: [
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            dayName(model.forecastList![index].dt),
-                            style: TextStyle(fontSize: 16, color: Colors.white),
+                            dayName(forecastList![index].dt),
+                            style: const TextStyle(
+                                fontSize: 16, color: Colors.white),
                           ),
                           Text(
-                            "${model.forecastList?[index].main!.temp!.toInt()} C°",
-                            style: TextStyle(
+                            "${forecastList[index].main!.temp!.toInt()} C°",
+                            style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white),
                           ),
                         ],
                       ),
-                      Image.asset(
-                        "assets/weather/icon_$iconName.png",
-                        width: MediaQuery.of(context).size.width * 0.16,
-                        height: MediaQuery.of(context).size.height * 0.1,
-                      ),
+                      iconImageWidget(iconName, context),
                     ],
                   );
                 },
               ),
       ),
       viewModelBuilder: () => ForecastViewModel(),
+    );
+  }
+
+  Image iconImageWidget(String? iconName, BuildContext context) {
+    return Image.asset(
+      "assets/weather/icon_$iconName.png",
+      width: MediaQuery.of(context).size.width * 0.16,
+      height: MediaQuery.of(context).size.height * 0.1,
     );
   }
 

@@ -4,8 +4,9 @@ import 'package:mart_tech_test/core/services/location_service.dart';
 import 'package:mart_tech_test/features/weather/view/splashpage/splash_screen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
-  LocationService().getCurrentLocation;
+  LocationService().getCurrentLocation();
   runApp(const MainApp());
 }
 
